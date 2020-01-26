@@ -92,7 +92,8 @@ if [ ${NUM_WAITS} -eq ${MAX_WAITS} ];then
   die "Timed out waiting for vulnerability scan to complete"
 fi
 
-IMAGE_NAME=$(echo ${IMAGE_PATH} | awk -F/ '{print $3}')
+# IMAGE_NAME=$(echo ${IMAGE_PATH} | awk -F/ '{print $3}')
+IMAGE_NAME=$(gcloud beta container images describe ${IMAGE_PATH} --format='value(image_summary.repository,image_summary.digest)' | awk -F/ '{print $2}' | awk -F' ' '{print $1"@"$2}')
 echo "Check vulnerability scan results here:"
 echo "https://console.cloud.google.com/gcr/images/${PROJECT_ID}/GLOBAL/${IMAGE_NAME}/details?tab=vulnz"
 
